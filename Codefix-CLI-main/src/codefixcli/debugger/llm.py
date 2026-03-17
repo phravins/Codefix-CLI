@@ -1,21 +1,24 @@
 """
-LLM Integration Module for Codefix-CLI.
-Handles communication with Ollama and builds prompts for code fixing.
+LLM Integration Module - Codefix CLI
+-----------------------------------
+Handles interaction with the Ollama local API for code fixing and explanation.
 """
 import subprocess
-import tomli
+import tomli as _tomli
 import os
-import json
 import requests
+import json
+
 import sys
 
 def _load_settings():
+    """Load settings from package resources or local file."""
     if sys.version_info >= (3, 9):
         from importlib.resources import files
         try:
             path = files('codefixcli').joinpath('settings.toml')
             with path.open("rb") as f:
-                return tomli.load(f)
+                return _tomli.load(f)
         except Exception:
             pass
 
@@ -23,12 +26,13 @@ def _load_settings():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "settings.toml"))
     try:
         with open(path, "rb") as f:
-            return tomli.load(f)
+            return _tomli.load(f)
     except Exception:
         # If all else fails, return defaults or empty
         return {}
 
 def ask_ollama(prompt: str) -> str:
+    """Send a prompt to the local Ollama instance and return the response text."""
     cfg = _load_settings()
     model = cfg.get("model", "qwen2.5Coder:0.5b")
     timeout = int(cfg.get("timeout_sec", 40))
@@ -74,6 +78,7 @@ def ask_ollama(prompt: str) -> str:
         return out.strip()
 
 def build_prompt(code: str, ast_data: dict, runtime_data: dict) -> str:
+    """Build a detailed prompt for the LLM based on the code and mode."""
     return (
         "You are CODEFIX. Generate ONLY a unified diff patch.\n"
         "No explanations. No comments. No markdown.\n\n"
