@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "codefixcli"
 version = "2.0.0"
 authors = [
-  { name = "Codefix Team" },
+  { name = "phravins", email = "phravins@example.com" },
 ]
 description = "AI-powered CLI for code analysis, fixing, and explanation"
 readme = "README.md"
