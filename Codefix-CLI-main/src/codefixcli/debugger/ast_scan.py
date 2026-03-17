@@ -1,6 +1,7 @@
 """
-AST Analysis Module for Codefix-CLI.
-Provides static analysis to detect common Python coding issues.
+AST Scanner Module - Codefix CLI
+-------------------------------
+Provides static analysis of Python code using the `ast` module.
 """
 import ast
 import sys
