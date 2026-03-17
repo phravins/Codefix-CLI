@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+"""
+Codefix CLI - Main Application Entry Point
+------------------------------------------
+This module provides the Textual-based TUI for analyzing and fixing Python code.
+"""
 
 from textual.app import App, ComposeResult
 from textual.widgets import Static, Button, TextArea, Footer, Select, Label
@@ -35,6 +40,7 @@ import tomli as _tomli
 import sys
 
 def _load_cfg():
+    """Load configuration from package resources or local file."""
     if sys.version_info >= (3, 9):
         from importlib.resources import files
         try:
@@ -74,6 +80,7 @@ MAX_HISTORY = 5
 
 # ── Logo widget ───────────────────────────────────────────────────────────────
 class LogoWidget(Static):
+    """Widget for displaying the application logo."""
     def render(self):
         t = Text()
         for line in LOGO:
@@ -88,6 +95,7 @@ class LogoWidget(Static):
 
 # ── Main app ──────────────────────────────────────────────────────────────────
 class CodeFixApp(App):
+    """The main Codefix TUI Application."""
     CSS = """
     Screen {
         layout: vertical;
@@ -270,6 +278,7 @@ class CodeFixApp(App):
 
     # ── Button dispatcher ─────────────────────────────────────────────────────
     def on_button_pressed(self, event: Button.Pressed):
+        """Handle button presses in the TUI."""
         bid = event.button.id
 
         if bid == "quit":
@@ -498,6 +507,7 @@ class CodeFixApp(App):
 
 
 def main():
+    """Main entry point for the Codefix CLI."""
     app = CodeFixApp()
     app.run()
 
