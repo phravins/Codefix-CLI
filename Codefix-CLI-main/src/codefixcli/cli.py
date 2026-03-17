@@ -207,8 +207,8 @@ class CodeFixApp(App):
         model = cfg.get("model", "qwen2.5-coder:0.5b")
 
         yield LogoWidget(id="logo")
-        yield Static("CODEFIX CLI  v2.0", id="subtitle")
-        yield Static("Paste code → Analyze / Fix / Explain", id="info")
+        yield Static("✨ CODEFIX CLI v2.0 ✨", id="subtitle")
+        yield Static("━━━━━ Paste code → Analyze / Fix / Explain ━━━━━", id="info")
 
         # Language picker toolbar
         with Horizontal(id="toolbar"):
@@ -240,7 +240,15 @@ class CodeFixApp(App):
             yield Button("Quit",         id="quit",         variant="error")
 
         yield Static(f"  Model: {model}  │  Ready", id="status_bar")
-        yield Footer()
+        footer = Footer()
+        yield footer
+
+    def on_mount(self) -> None:
+        self.bind("ctrl+q", "quit", description="Quit")
+        self.bind("ctrl+a", "analyze", description="Analyze")
+        self.bind("ctrl+f", "fix", description="Fix")
+        self.bind("ctrl+e", "explain", description="Explain")
+        self.bind("ctrl+c", "copy_output", description="Copy Output")
 
     # ── Helpers ───────────────────────────────────────────────────────────────
     def _set_status(self, msg: str):
