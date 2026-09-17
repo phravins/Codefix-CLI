@@ -2,7 +2,7 @@
 
 from textual.app import App, ComposeResult
 from textual.widgets import Static, Button, TextArea, Footer, Select, Label
-from textual.containers import Vertical, Horizontal, ScrollableContainer
+from textual.containers import Horizontal, ScrollableContainer
 from textual import work
 from rich.text import Text
 from rich.markup import escape
@@ -12,17 +12,18 @@ import re
 import os
 import datetime
 
+try:
+    import tomllib as _tomli
+except ImportError:
+    import tomli as _tomli
+
 from debugger import (
     scan,
     run_in_sandbox,
-    build_prompt,
     ask_ollama,
-    extract_unified_diff,
-    apply_patch,
 )
 
 # ── Settings ──────────────────────────────────────────────────────────────────
-import tomli as _tomli
 def _load_cfg():
     path = os.path.join(os.path.dirname(__file__), "settings.toml")
     try:
