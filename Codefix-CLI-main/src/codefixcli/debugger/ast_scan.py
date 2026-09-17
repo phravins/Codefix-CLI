@@ -4,7 +4,6 @@ AST Scanner Module - Codefix CLI
 Provides static analysis of Python code using the `ast` module.
 """
 import ast
-import sys
 
 # ── Cyclomatic complexity counter ──────────────────────────────────────────────
 _BRANCH_NODES = (
