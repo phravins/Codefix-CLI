@@ -1,5 +1,4 @@
 import ast
-import sys
 
 # ── Cyclomatic complexity counter ──────────────────────────────────────────────
 _BRANCH_NODES = (
