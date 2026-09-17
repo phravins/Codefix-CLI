@@ -3,6 +3,16 @@ import tomli
 import os
 import requests
 import json
+import asyncio
+import threading
+
+_thread_local = threading.local()
+
+def _get_session() -> requests.Session:
+    """Get or create a thread-local requests.Session for thread-safe connection reuse."""
+    if not hasattr(_thread_local, "session"):
+        _thread_local.session = requests.Session()
+    return _thread_local.session
 
 def _load_settings():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "settings.toml"))
@@ -17,7 +27,8 @@ def ask_ollama(prompt: str) -> str:
     
     # Try API method first (more reliable)
     try:
-        response = requests.post(
+        session = _get_session()
+        response = session.post(
             f"{host}/api/generate",
             json={
                 "model": model,
@@ -53,6 +64,10 @@ def ask_ollama(prompt: str) -> str:
         out = out.replace("```python", "").replace("```diff", "")
         out = out.replace("```", "")
         return out.strip()
+
+async def ask_ollama_async(prompt: str) -> str:
+    """Asynchronous wrapper for ask_ollama to avoid blocking async event loops."""
+    return await asyncio.to_thread(ask_ollama, prompt)
 
 def build_prompt(code: str, ast_data: dict, runtime_data: dict) -> str:
     return (
