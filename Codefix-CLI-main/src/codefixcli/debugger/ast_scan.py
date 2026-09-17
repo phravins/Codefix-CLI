@@ -50,11 +50,12 @@ def scan(code: str) -> dict:
                     break
 
     # ── 2. Unused imports ─────────────────────────────────────────────────────
+    loaded_names = _get_loaded_names(tree)
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
                 name = alias.asname or alias.name
-                if not _is_used_in_tree(name, tree):
+                if name not in loaded_names:
                     issues.append({
                         "kind": "unused_import",
                         "message": f"Unused import: '{name}'",
@@ -64,7 +65,7 @@ def scan(code: str) -> dict:
             for alias in node.names:
                 if alias.name != "*":
                     name = alias.asname or alias.name
-                    if not _is_used_in_tree(name, tree):
+                    if name not in loaded_names:
                         issues.append({
                             "kind": "unused_import",
                             "message": f"Unused import: '{name}'",
@@ -151,8 +152,9 @@ def scan(code: str) -> dict:
     return {"ok": True, "issues": issues, "complexity": complexity}
 
 
+def _get_loaded_names(tree):
+    return {node.id for node in ast.walk(tree) if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load)}
+
+
 def _is_used_in_tree(name, tree):
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Name) and node.id == name and isinstance(node.ctx, ast.Load):
-            return True
-    return False
+    return name in _get_loaded_names(tree)
