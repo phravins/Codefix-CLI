@@ -1,4 +1,5 @@
 import ast
+import builtins
 import sys
 
 # ── Cyclomatic complexity counter ──────────────────────────────────────────────
@@ -119,7 +120,7 @@ def scan(code: str) -> dict:
     try:
         class UndefinedVarVisitor(ast.NodeVisitor):
             def __init__(self):
-                self.defined_vars = set()
+                self.defined_vars = set(dir(builtins))
                 self.current_scope = set()
 
             def visit_Assign(self, node):

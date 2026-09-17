@@ -8,8 +8,17 @@ import tomli as _tomli
 import os
 import requests
 import json
-
 import sys
+import asyncio
+import threading
+
+_thread_local = threading.local()
+
+def _get_session() -> requests.Session:
+    """Get or create a thread-local requests.Session for thread-safe connection reuse."""
+    if not hasattr(_thread_local, "session"):
+        _thread_local.session = requests.Session()
+    return _thread_local.session
 
 def _load_settings():
     """Load settings from package resources or local file."""
@@ -40,7 +49,8 @@ def ask_ollama(prompt: str) -> str:
     
     # Try API method first (more reliable)
     try:
-        response = requests.post(
+        session = _get_session()
+        response = session.post(
             f"{host}/api/generate",
             json={
                 "model": model,
@@ -76,6 +86,10 @@ def ask_ollama(prompt: str) -> str:
         out = out.replace("```python", "").replace("```diff", "")
         out = out.replace("```", "")
         return out.strip()
+
+async def ask_ollama_async(prompt: str) -> str:
+    """Asynchronous wrapper for ask_ollama to avoid blocking async event loops."""
+    return await asyncio.to_thread(ask_ollama, prompt)
 
 def build_prompt(code: str, ast_data: dict, runtime_data: dict) -> str:
     """Build a detailed prompt for the LLM based on the code and mode."""

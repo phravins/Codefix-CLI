@@ -1,4 +1,4 @@
-from codefixcli.debugger.scan import scan
+from codefixcli.debugger.ast_scan import scan
 
 def test_syntax_error():
     res = scan("if True")
