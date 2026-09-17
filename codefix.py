@@ -10,9 +10,15 @@ import pyperclip
 import traceback
 import re
 import os
+import sys
 import datetime
 
-from debugger import (
+# Ensure Codefix-CLI-main/src is in sys.path if running codefix.py directly
+src_dir = os.path.join(os.path.dirname(__file__), "Codefix-CLI-main", "src")
+if os.path.exists(src_dir) and src_dir not in sys.path:
+    sys.path.insert(0, src_dir)
+
+from codefixcli.debugger import (
     scan,
     run_in_sandbox,
     build_prompt,

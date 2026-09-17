@@ -17,24 +17,14 @@ import re
 import os
 import datetime
 
-try:
-    from .debugger import (
-        scan,
-        run_in_sandbox,
-        build_prompt,
-        ask_ollama,
-        extract_unified_diff,
-        apply_patch,
-    )
-except ImportError:
-    from debugger import (
-        scan,
-        run_in_sandbox,
-        build_prompt,
-        ask_ollama,
-        extract_unified_diff,
-        apply_patch,
-    )
+from .debugger import (
+    scan,
+    run_in_sandbox,
+    build_prompt,
+    ask_ollama,
+    extract_unified_diff,
+    apply_patch,
+)
 
 # ── Settings ──────────────────────────────────────────────────────────────────
 import tomli as _tomli
