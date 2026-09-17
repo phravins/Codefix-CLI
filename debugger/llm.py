@@ -3,7 +3,9 @@ import tomli
 import os
 import requests
 import json
+from functools import lru_cache
 
+@lru_cache(maxsize=1)
 def _load_settings():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "settings.toml"))
     with open(path, "rb") as f:
