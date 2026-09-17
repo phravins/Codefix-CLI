@@ -41,6 +41,19 @@ LOGO = [
     " ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝     ╚═════╝╚══════╝╚═╝",
 ]
 
+def _build_logo_text() -> Text:
+    t = Text()
+    for line in LOGO:
+        for char in line:
+            if char != ' ':
+                t.append(char, style="bold #9370db")
+            else:
+                t.append(char)
+        t.append("\n")
+    return t
+
+_PRE_RENDERED_LOGO = _build_logo_text()
+
 LANGUAGES = [
     ("Python",     "python"),
     ("JavaScript", "javascript"),
@@ -54,15 +67,7 @@ MAX_HISTORY = 5
 # ── Logo widget ───────────────────────────────────────────────────────────────
 class LogoWidget(Static):
     def render(self):
-        t = Text()
-        for line in LOGO:
-            for char in line:
-                if char != ' ':
-                    t.append(char, style="bold #9370db")
-                else:
-                    t.append(char)
-            t.append("\n")
-        return t
+        return _PRE_RENDERED_LOGO
 
 
 # ── Main app ──────────────────────────────────────────────────────────────────
