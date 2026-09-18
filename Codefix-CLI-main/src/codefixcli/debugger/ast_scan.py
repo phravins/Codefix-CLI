@@ -122,9 +122,12 @@ def scan(code: str) -> dict:
 
     # ── 7. Undefined variables (best-effort) ──────────────────────────────────
     try:
+        import builtins
+        builtin_names = set(dir(builtins))
+
         class UndefinedVarVisitor(ast.NodeVisitor):
             def __init__(self):
-                self.defined_vars = set()
+                self.defined_vars = set(builtin_names)
                 self.current_scope = set()
 
             def visit_Assign(self, node):
